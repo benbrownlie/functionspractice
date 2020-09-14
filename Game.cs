@@ -4,11 +4,7 @@ using System.Text;
 
 namespace HelloWorld
 {
-    struct Player
-    {
-        public int health;
-        public int damage;
-    }
+
 
     struct Item
     {
@@ -74,7 +70,7 @@ namespace HelloWorld
             }
         }
         //Equip items to both players at the beginning of the game
-        public void EquipItems()
+        public void SelectItems()
         {
             //Get input from Player1
             char input;
@@ -82,30 +78,36 @@ namespace HelloWorld
             //Equip item based on input value
             if (input == '1')
             {
-              _player1.damage += sword.statBoost;
-
+                _player1.EquipItem(sword);
             }
             else if (input == '2')
             {
-              _player1.damage += axe.statBoost;
+                _player1.EquipItem(axe);
             }
             Console.WriteLine("Player 1");
-            PrintStats(_player1);
+            _player1.PrintStats();
 
             //Get input from Player2
             GetInput(out input, "Sword", "Axe", "Welcome! Player 2 choose a weapon.");
             //Equip item based on input value
             if (input == '1')
             {
-                _player2.damage += sword.statBoost;
-
+                _player2.EquipItem(sword);
             }
             else if (input == '2')
             {
-                _player2.damage += axe.statBoost;
+                _player2.EquipItem(axe);
             }
             Console.WriteLine("Player 2");
-            PrintStats(_player2);
+            _player2.PrintStats();
+        }
+
+        public void CreateCharacter(Player player)
+        {
+            Console.WriteLine("What is your name?");
+            string name = Console.ReadLine();
+            Player player = new Player(name, 100, 10);
+            SelectItems(player);
         }
 
         public void StartBattle()
@@ -113,13 +115,13 @@ namespace HelloWorld
             Console.Clear();
             Console.WriteLine("Begin battle!");
 
-            while(_player1.health > 0 && _player2.health > 0)
+            while(_player1.GetIsAlive() && _player2.GetIsAlive())
             {
                 //prints player stats to console
                 Console.WriteLine("\nPlayer 1");
-                PrintStats(_player1);
+                _player1.PrintStats();
                 Console.WriteLine("\nPlayer 2");
-                PrintStats(_player2);
+                _player2.PrintStats();
                 //Player 1 turn start
                 //Get player input
                 char input;
@@ -127,8 +129,7 @@ namespace HelloWorld
 
                 if (input == '1')
                 {
-                    _player2.health -= _player1.damage;
-                    Console.WriteLine("Player 1 swung their weapon and dealt " + _player1.damage + " damage to Player 2");
+                    _player1.Attack(_player2);
                 }
                 else
                 {
@@ -139,8 +140,7 @@ namespace HelloWorld
 
                 if (input == '1')
                 {
-                    _player1.health -= _player2.damage;
-                    Console.WriteLine("Player 2 swung their weapon and dealt " + _player2.damage + " damage to Player 1");
+                    _player2.Attack(_player1);
                 }
                 else
                 {
@@ -149,7 +149,7 @@ namespace HelloWorld
                 Console.Clear();
             }
 
-            if(_player1.health > 0)
+            if(_player1.GetIsAlive())
             {
                 Console.WriteLine("Player 1 wins!!!");
             }
@@ -161,25 +161,20 @@ namespace HelloWorld
             _gameOver = true;
         }
 
-        //Prints player stats to the console
-        public void PrintStats(Player player)
-        {
-            Console.WriteLine("Health: " + player.health);
-            Console.WriteLine("Damage: " + player.damage);
-        }
-
 
         //Performed once when the game begins
         public void Start()
         {
-            InitializePlayers();
+            //InitializePlayers();
             InitializeItems();
         }
 
         //Repeated until the game ends
         public void Update()
         {
-            EquipItems();
+            CreateCharacter(_player1 = CreateCharacter);
+            CreateCharacter(_player2 = CreateCharacter);
+            
             StartBattle();
         }
 
