@@ -19,6 +19,7 @@ namespace HelloWorld
         Player _player2;
         Item sword;
         Item axe;
+        public Enemies monster;
 
         //Run the game
         public void Run()
@@ -37,6 +38,26 @@ namespace HelloWorld
         {
             sword.statBoost = 10;
             axe.statBoost = 15;
+        }
+        
+        public void SelectGameMode()
+        {
+            Console.WriteLine("Welcome to the test garden! Please select a gamemode.");
+            char input;
+            GetInput(out input, "Singleplayer", "Multiplayer", "Choose");
+            if (input == '1')
+            {
+                Console.Clear();
+                Console.WriteLine("You have chosen singleplayer!");
+            }
+            else
+            {
+                Console.Clear();
+                Console.WriteLine("You have chosen multiplayer!");
+                _player1 = CreateCharacter();
+                _player2 = CreateCharacter();
+                StartBattle();
+            }
         }
 
         //Displays options to the player, Outputs the choice of the two options
@@ -69,11 +90,11 @@ namespace HelloWorld
             //Equip item based on input value
             if (input == '1')
             {
-                player.EquipItem(sword);
+                player.AddItemToInventory(sword, 0);
             }
             else if (input == '2')
             {
-                player.EquipItem(axe);
+                player.AddItemToInventory(axe, 0);
             }
         }
 
@@ -81,7 +102,7 @@ namespace HelloWorld
         {
             Console.WriteLine("What is your name?");
             string name = Console.ReadLine();
-            Player player = new Player(name, 100, 10);
+            Player player = new Player(name, 100, 10, 5);
             SelectItems(player);
             return player;
         }
@@ -135,6 +156,104 @@ namespace HelloWorld
             }
             Console.ReadKey();
             _gameOver = true;
+        }
+
+        public void EnemyBattle()
+        {
+            while(_player1.GetIsAlive() && monster.GetEnemyAlive())
+            {
+                Console.WriteLine("\nPlayer");
+                _player1.PrintStats();
+                char input;
+                GetInput(out input, "Attack", "Potion", "What will you do?");
+                if (input == '1')
+                {
+                    _player1.Attack(monster);
+
+                }
+                else
+                {
+
+                }
+            }
+        }
+        public void BattleArena(int enemyWave, int enemyHealthVal, int enemyDamageVal, string enemyNameVal)
+        {//Wave based enemy fight
+            Console.WriteLine("You enter into the arena.");
+            Console.WriteLine("An enemy steps out before you.");
+            switch (enemyWave)
+            {
+                case 1:
+                    {
+                        Console.WriteLine("A skeleton enters the arena!");
+                        enemyNameVal = "Skeleton";
+                        enemyHealthVal = 30;
+                        enemyDamageVal = 10;
+                        break;
+                    }
+                case 2:
+                    {
+                        Console.WriteLine("A ghoul enters the arena!");
+                        enemyNameVal = "Ghoul";
+                        enemyHealthVal = 50;
+                        enemyDamageVal = 40;
+                        break;
+                    }
+                case 3:
+                    {
+                        Console.WriteLine("A phantom enters the arena");
+                        enemyNameVal = "Phantom";
+                        enemyHealthVal = 80;
+                        enemyDamageVal = 30;
+                        break;
+                    }
+                case 4:
+                    {
+                        Console.WriteLine("The final boss enters the arena");
+                        enemyNameVal = "Final Boss";
+                        enemyHealthVal = 150;
+                        enemyDamageVal = 40;
+                        break;
+                    }
+                default:
+                    {
+                        Console.WriteLine("You made it to the end!");
+                        break;
+                    }
+            }
+        }
+
+        public void ArenaWave(int enemyWave)
+        {
+            switch (enemyWave)
+            {
+                case 1:
+                    {
+                        Console.WriteLine("Wave 1.");
+                        break;
+                    }
+                case 2:
+                    {
+                        Console.WriteLine("Wave 2.");
+                        break;
+                    }
+                case 3:
+                    {
+                        Console.WriteLine("Wave 3.");
+                        break;
+                    }
+                case 4:
+                    {
+                        Console.WriteLine("FINAL WAVE.");
+                        break;
+                    }
+            }
+            int waveNum = 0;
+            //if (EnemyBattle(enemyWave, waveNum))
+            {
+
+            }
+
         }
 
 
