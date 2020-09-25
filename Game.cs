@@ -24,6 +24,8 @@ namespace HelloWorld
         Item spear;
         Item bomb;
         Item hammer;
+        private Character _player1Partner;
+        private Character _player2Partner;
         public Enemies monster;
 
         //Run the game
@@ -222,7 +224,10 @@ namespace HelloWorld
 
                 if (input == '1')
                 {
-                    _player1.Attack(_player2);
+                    float damageTaken = _player1.Attack(_player2);
+                    Console.WriteLine(_player1.GetName() + " did " + damageTaken + " damage.");
+                    damageTaken = _player1Partner.Attack(_player2);
+                    Console.WriteLine(_player1Partner.GetName() + " did " + damageTaken + " damage.");
                 }
                 else
                 {
@@ -233,7 +238,10 @@ namespace HelloWorld
 
                 if (input == '1')
                 {
-                    _player2.Attack(_player1);
+                    float damageTaken = _player1.Attack(_player1);
+                    Console.WriteLine(_player2.GetName() + " did" + damageTaken + " damage.");
+                    damageTaken = _player2Partner.Attack(_player2);
+                    Console.WriteLine(_player2Partner.GetName() + " did" + damageTaken + " damage.");
                 }
                 else
                 {
@@ -254,25 +262,25 @@ namespace HelloWorld
             _gameOver = true;
         }
 
-        public void EnemyBattle()
-        {
-            while(_player1.GetIsAlive() && monster.GetEnemyAlive())
-            {
-                Console.WriteLine("\nPlayer");
-                _player1.PrintStats();
-                char input;
-                GetInput(out input, "Attack", "Potion", "What will you do?");
-                if (input == '1')
-                {
-                    _player1.Attack(monster);
-
-                }
-                else
-                {
-
-                }
-            }
-        }
+       // public void EnemyBattle()
+       // {
+           // while(_player1.GetIsAlive() && monster.GetEnemyAlive())
+          //  {
+          //      Console.WriteLine("\nPlayer");
+          //      _player1.PrintStats();
+         //       char input;
+          //      GetInput(out input, "Attack", "Potion", "What will you do?");
+          //      if (input == '1')
+         //       {
+         //           _player1.Attack(monster);
+         //
+         //       }
+         //       else
+          //      {
+          //
+             //   }
+           // }
+        //}
         public void BattleArena(int enemyWave, int enemyHealthVal, int enemyDamageVal, string enemyNameVal)
         {//Wave based enemy fight
             Console.WriteLine("You enter into the arena.");
@@ -357,6 +365,8 @@ namespace HelloWorld
         public void Start()
         {
             InitializeItems();
+            _player1Partner = new Wizard(120, "Wizard", 20, 100);
+            _player2Partner = new Wizard(120, "Draziw", 20, 100);
         }
 
         //Repeated until the game ends
