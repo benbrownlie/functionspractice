@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace HelloWorld
@@ -152,6 +153,43 @@ namespace HelloWorld
             };
         }
 
+        public void Save()
+        {
+            //Create a new stream writer
+            StreamWriter writer = new StreamWriter("SaveData.txt");
+            //Call save for both instances of player
+            _player1.Save(writer);
+            _player2.Save(writer);
+            //Close writer
+            writer.Close();
+        }
+
+        public void Load()
+        {
+            //Create a new stream reader
+            StreamReader reader = new StreamReader("SaveData.txt");
+            //Call load for each instance of player to load data
+            _player1.Load(reader);
+            _player2.Load(reader);
+            //Close reader
+            reader.Close();
+        }
+
+        public void OpenMainMenu()
+        {
+            char input;
+            GetInput(out input, "Create new character", "Load character", "What do you want to do?");
+            if (input == '2')
+            {
+                _player1 = new Player();
+                _player2 = new Player();
+                Load();
+                return;  
+            }
+            _player1 = CreateCharacter();
+            _player2 = CreateCharacter();
+        }
+
         public Player CreateCharacter()
         {
             Console.WriteLine("What is your name?");
@@ -205,6 +243,11 @@ namespace HelloWorld
             }
         }
 
+        public void PrintObject(object item)
+        {
+            Console.WriteLine(item);
+        }
+
         public void StartBattle()
         {
             Console.Clear();
@@ -220,7 +263,7 @@ namespace HelloWorld
                 //Player 1 turn start
                 //Get player input
                 char input;
-                GetInput(out input, "Attack", "Change Weapon", "\nYour turn Player 1");
+                GetInput(out input, "Attack", "Change Weapon", "Save", "\nYour turn Player 1");
 
                 if (input == '1')
                 {
@@ -229,12 +272,16 @@ namespace HelloWorld
                     damageTaken = _player1Partner.Attack(_player2);
                     Console.WriteLine(_player1Partner.GetName() + " did " + damageTaken + " damage.");
                 }
-                else
+                if(input == '2')
                 {
                     SwitchWeapons(_player1);
                 }
+                else
+                {
+                    Save();
+                }
 
-                GetInput(out input, "Attack", "No", "\nYour turn Player 2");
+                GetInput(out input, "Attack", "No", "Save", "\nYour turn Player 2");
 
                 if (input == '1')
                 {
@@ -243,7 +290,7 @@ namespace HelloWorld
                     damageTaken = _player2Partner.Attack(_player2);
                     Console.WriteLine(_player2Partner.GetName() + " did" + damageTaken + " damage.");
                 }
-                else
+                if(input == '2')
                 {
                     SwitchWeapons(_player2);
                 }
@@ -372,8 +419,6 @@ namespace HelloWorld
         //Repeated until the game ends
         public void Update()
         {
-            _player1 = CreateCharacter();
-            _player2 = CreateCharacter();
             StartBattle();
         }
 

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.IO;
+using System.Threading.Channels;
 
 namespace HelloWorld
 {
@@ -38,6 +40,37 @@ namespace HelloWorld
                 _health = 0;
             }
             return damageVal;
+        }
+
+        public virtual void Save(StreamWriter writer)
+        {
+            //Saves the character's stats
+            writer.WriteLine(_name);
+            writer.WriteLine(_health);
+            writer.WriteLine(_damage);
+            
+        }
+
+        public virtual bool Load(StreamReader reader)
+        {
+            //Create variables to store loaded data
+            string name = reader.ReadLine();
+            float damage = 0;
+            float health = 0;
+            //Checks to see if the loading was successful
+            if (float.TryParse(reader.ReadLine(), out health) == false)
+            {
+                return false;
+            }
+            if (float.TryParse(reader.ReadLine(), out damage) == false)
+            {
+                return false;
+            }
+            //If successful, set the update member variables and return true
+            _name = name;
+            _health = health;
+            _damage = damage;
+            return true;
         }
 
         public string GetName()
